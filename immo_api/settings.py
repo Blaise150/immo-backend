@@ -10,12 +10,24 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ==============================
 SECRET_KEY = config("DJANGO_SECRET_KEY", default="clef-par-defaut")
 DEBUG = config("DEBUG", default=False, cast=bool)
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="", cast=lambda v: [s.strip() for s in v.split(",")])
-CORS_ALLOWED_ORIGINS = config(
-    'CORS_ALLOWED_ORIGINS',
-    default='http://localhost:3000,https://immo-frontend-hqch.vercel.app',
-    cast=lambda v: [s.strip() for s in v.split(',')]
-)
+
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    'immo-backend-production-deb8.up.railway.app',
+    '.railway.app',  # Tous les sous-domaines Railway
+]
+
+# CORS - Permettre Railway et Vercel
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+    'https://immo-frontend-hqch.vercel.app',
+    'https://immo-frontend.vercel.app',
+    'https://immo-backend-production-deb8.up.railway.app',
+]
+
+CORS_ALLOW_ALL_ORIGINS = False  # Sécurisé
+CORS_ALLOW_CREDENTIALS = True
 # CSRF Configuration
 CSRF_TRUSTED_ORIGINS = config(
     'CSRF_TRUSTED_ORIGINS',
