@@ -16,6 +16,11 @@ CORS_ALLOWED_ORIGINS = config(
     default='http://localhost:3000,https://immo-frontend-hqch.vercel.app',
     cast=lambda v: [s.strip() for s in v.split(',')]
 )
+# CSRF Configuration
+CSRF_TRUSTED_ORIGINS = config(
+    'CSRF_TRUSTED_ORIGINS',
+    default='https://immo-backend-production-deb8.up.railway.app'
+).split(',')
 # ==============================
 # APPLICATIONS
 # ==============================
