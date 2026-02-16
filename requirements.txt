@@ -1,6 +1,8 @@
-jango==5.0
-djangorestframework==3.14.0
-djangorestframework-simplejwt==5.3.1
-django-cors-headers==4.3.1
-django-filter==23.5
-Pillow==10.2.0
+Django>=4.2
+djangorestframework
+django-cors-headers
+gunicorn
+whitenoise
+dj-database-url
+psycopg2-binary
+python-decouple
