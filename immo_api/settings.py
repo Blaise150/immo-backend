@@ -1,8 +1,11 @@
 from pathlib import Path
 import os
 import dj_database_url
-from decouple import config
 
+CORS_ALLOWED_ORIGINS = config(
+    'CORS_ALLOWED_ORIGINS',
+    default='http://localhost:3000,https://immo-frontend-hqch.vercel.app'
+).split(',')
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY
@@ -68,12 +71,24 @@ WSGI_APPLICATION = 'immo_api.wsgi.application'
 # En haut du fichier, avec les autres imports
 
 # Puis dans la section DATABASES :
-DATABASES = {
-    'default': dj_database_url.config(
-        default='sqlite:///db.sqlite3',
-        conn_max_age=600
-    )
-}
+# DATABASE - Fallback sur SQLite si DATABASE_URL n'existe pas
+DATABASE_URL = os.getenv('DATABASE_URL', '')
+
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600
+        )
+    }
+else:
+    # Utiliser SQLite par défaut
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
