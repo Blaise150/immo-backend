@@ -24,9 +24,10 @@ CORS_ALLOWED_ORIGINS = [
     'https://immo-frontend-hqch.vercel.app',
     'https://immo-frontend.vercel.app',
     'https://immo-backend-production-deb8.up.railway.app',
+    'https://immo-frontend-blaise150.vercel.app',
 ]
 
-CORS_ALLOW_ALL_ORIGINS = False  # Sécurisé
+CORS_ALLOW_ALL_ORIGINS = True  # Sécurisé
 CORS_ALLOW_CREDENTIALS = True
 # CSRF Configuration
 CSRF_TRUSTED_ORIGINS = config(
