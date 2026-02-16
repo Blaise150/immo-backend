@@ -6,10 +6,11 @@ from decouple import config
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY
-SECRET_KEY = config('SECRET_KEY', default='django-insecure-changeme-in-production')
-DEBUG = config('DEBUG', default=False, cast=bool)
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1').split(',')
 
+
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "clef-par-defaut")
+DEBUG = os.getenv("DEBUG", "False") == "True"
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -63,10 +64,9 @@ WSGI_APPLICATION = 'immo_api.wsgi.application'
 
 # DATABASE - utilise PostgreSQL en production, SQLite en local
 DATABASES = {
-    'default': dj_database_url.config(
-        default=f'sqlite:///{BASE_DIR / "db.sqlite3"}',
-        conn_max_age=600
-    )
+    'default': dj_database_url.config(default=os.getenv("DATABASE_URL"))
+      
+    
 }
 
 AUTH_PASSWORD_VALIDATORS = [
