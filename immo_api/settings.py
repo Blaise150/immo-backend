@@ -63,12 +63,17 @@ TEMPLATES = [
 WSGI_APPLICATION = 'immo_api.wsgi.application'
 
 # DATABASE - utilise PostgreSQL en production, SQLite en local
-DATABASES = {
-    'default': dj_database_url.config(default=os.getenv("DATABASE_URL"))
-      
-    
-}
 
+
+# En haut du fichier, avec les autres imports
+
+# Puis dans la section DATABASES :
+DATABASES = {
+    'default': dj_database_url.config(
+        default='sqlite:///db.sqlite3',
+        conn_max_age=600
+    )
+}
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
