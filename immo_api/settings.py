@@ -1,19 +1,24 @@
 from pathlib import Path
 import os
+from decouple import config
 import dj_database_url
 
-CORS_ALLOWED_ORIGINS = config(
-    'CORS_ALLOWED_ORIGINS',
-    default='http://localhost:3000,https://immo-frontend-hqch.vercel.app'
-).split(',')
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# ==============================
 # SECURITY
-
-
-SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "clef-par-defaut")
-DEBUG = os.getenv("DEBUG", "False") == "True"
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
+# ==============================
+SECRET_KEY = config("DJANGO_SECRET_KEY", default="clef-par-defaut")
+DEBUG = config("DEBUG", default=False, cast=bool)
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="", cast=lambda v: [s.strip() for s in v.split(",")])
+CORS_ALLOWED_ORIGINS = config(
+    'CORS_ALLOWED_ORIGINS',
+    default='http://localhost:3000,https://immo-frontend-hqch.vercel.app',
+    cast=lambda v: [s.strip() for s in v.split(',')]
+)
+# ==============================
+# APPLICATIONS
+# ==============================
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -65,14 +70,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'immo_api.wsgi.application'
 
-# DATABASE - utilise PostgreSQL en production, SQLite en local
-
-
-# En haut du fichier, avec les autres imports
-
-# Puis dans la section DATABASES :
-# DATABASE - Fallback sur SQLite si DATABASE_URL n'existe pas
-DATABASE_URL = os.getenv('DATABASE_URL', '')
+# ==============================
+# DATABASE
+# ==============================
+DATABASE_URL = config('DATABASE_URL', default='')
 
 if DATABASE_URL:
     DATABASES = {
@@ -82,38 +83,51 @@ if DATABASE_URL:
         )
     }
 else:
-    # Utiliser SQLite par défaut
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
+
+# ==============================
+# PASSWORD VALIDATION
+# ==============================
 AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
+# ==============================
+# INTERNATIONALIZATION
+# ==============================
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
+# ==============================
 # STATIC FILES
+# ==============================
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+# ==============================
 # CORS
+# ==============================
 CORS_ALLOWED_ORIGINS = config(
     'CORS_ALLOWED_ORIGINS',
-    default='http://localhost:3000,https://immo-frontend-hqch.vercel.app'
-).split(',')
+    default='http://localhost:3000,https://immo-frontend-hqch.vercel.app',
+    cast=lambda v: [s.strip() for s in v.split(',')]
+)
 CORS_ALLOW_CREDENTIALS = True
 
+# ==============================
 # REST FRAMEWORK
+# ==============================
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -122,6 +136,8 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 12,
 }
 
+# ==============================
+# AUTH
+# ==============================
 AUTH_USER_MODEL = 'users.User'
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
