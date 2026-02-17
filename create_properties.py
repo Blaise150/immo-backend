@@ -4,7 +4,9 @@ import random
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'immo_api.settings')
 django.setup()
-
+print("=" * 60)
+print("🚀 DÉBUT DU SCRIPT DE CRÉATION DES PROPRIÉTÉS")
+print("=" * 60)
 from properties.models import Property
 from users.models import User
 
